@@ -70,6 +70,8 @@ namespace CodeBase.Logic.Planetary.Factory {
         double planetMass = _randomService.Next(minMass, maxMass);
         if (_iteration >= maxIteration) {
           planetMass = _planetInfo[leftMass].MaxMass >= leftMass ? leftMass : _planetInfo[leftMass].MaxMass;
+          
+          Logger.Log("Mass Class " + massClassEnum);
           InstantiatePlanet(PlaneterySystemBehaviour, planetMass, planeteryObjects);
           leftMass -= planetMass;
 
