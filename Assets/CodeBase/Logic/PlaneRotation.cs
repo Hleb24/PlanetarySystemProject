@@ -3,6 +3,8 @@ using UnityEngine;
 namespace CodeBase.Logic {
   public class PlaneRotation : MonoBehaviour {
     [SerializeField]
+    private Transform _target;
+    [SerializeField]
     private bool _notRotate;
     [SerializeField]
     private Vector3 _rotationAngles;
@@ -22,7 +24,7 @@ namespace CodeBase.Logic {
     }
 
     private void RotatePlanet(float deltaTime) {
-      transform.Rotate(GetEulers(deltaTime));
+      _target.Rotate(GetEulers(deltaTime));
     }
 
     private Vector3 GetEulers(float deltaTime) {
