@@ -1,5 +1,3 @@
-using CodeBase.Logic.Planetary;
-
 namespace CodeBase.Infrastructure.Services {
   public interface IRandomService : IService {
     void InitState();

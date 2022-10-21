@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace CodeBase.Logic {
-  public class PlaneRotation : MonoBehaviour {
+namespace CodeBase.Logic.Planetary {
+  public class PlanetRotation : MonoBehaviour {
     [SerializeField]
     private Transform _target;
     [SerializeField]

@@ -3,10 +3,14 @@ using CodeBase.Logic.Planetary;
 using UnityEngine;
 
 namespace CodeBase.Data.StaticData {
-  [CreateAssetMenu(fileName = "PlanetStaticData", menuName = "Static Data/Planet Data", order = 0)]
-  public class PlanetStaticData : ScriptableObject, IPlanetInfo {
+  [CreateAssetMenu(fileName = "PlanetsStaticData", menuName = "Static Data/Planets Data", order = 0)]
+  public class PlanetsStaticData : ScriptableObject, IPlanetsData {
     [SerializeField]
     private List<PlanetData> _planets;
+    [SerializeField]
+    private float _stepForOrbitRadius;
+    [SerializeField]
+    private float _startOrbitRadius;
 
     public PlanetData this[MassClassEnum massClass] {
       get {
@@ -25,6 +29,18 @@ namespace CodeBase.Data.StaticData {
         }
 
         return _planets.Find(data => data.Is(mass));
+      }
+    }
+
+    public float StepForOrbitRadius {
+      get {
+        return _stepForOrbitRadius;
+      }
+    }
+
+    public float StartOrbitRadius {
+      get {
+        return _startOrbitRadius;
       }
     }
   }

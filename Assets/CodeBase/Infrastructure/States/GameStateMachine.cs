@@ -11,7 +11,7 @@ namespace CodeBase.Infrastructure.States {
     public GameStateMachine(AllServices services) {
       _states = new Dictionary<Type, IExitableState> {
         { typeof(BootstrapState), new BootstrapState(this, services) },
-        { typeof(LoadLevelState), new LoadLevelState(services.Single<IAssetsProvider>(), services.Single<IPlaneterySystemFactory>()) }
+        { typeof(LoadLevelState), new LoadLevelState(services.Single<IPlaneterySystemFactory>(), services.Single<IAssetsProvider>()) }
       };
     }
 

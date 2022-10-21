@@ -24,6 +24,7 @@ namespace CodeBase.Infrastructure.States {
     private void RegisterServices() {
       RegisterRandomService();
       IAssetsProvider assetsProvider = RegisterIAssetsProvider();
+
       RegisterIPlaneterySystemFactory(assetsProvider);
     }
 
@@ -40,11 +41,13 @@ namespace CodeBase.Infrastructure.States {
     }
 
     private void RegisterIPlaneterySystemFactory(IAssetsProvider assetsProvider) {
-      var planetStaticData = assetsProvider.Load<PlanetStaticData>(AssetsPath.PLANET_STATIC_DATA);
+      var planetStaticData = assetsProvider.Load<PlanetsStaticData>(AssetsPath.PLANET_STATIC_DATA);
       var planeteryObject = assetsProvider.Load<PlaneteryObject>(AssetsPath.PLANET);
       var planeterySystemBehaviour = assetsProvider.Load<PlaneterySystemBehaviour>(AssetsPath.PLANETARY_SYSTEM);
-      _services.RegisterSingle<IPlaneterySystemFactory>(new PlaneterySystemFactory(planeterySystemBehaviour, planeteryObject, planetStaticData,
-        _services.Single<IRandomService>()));
+      var planeterySystemCalculator = new PlaneterySystemCalculator(planetStaticData, _services.Single<IRandomService>());
+      var planeterySystemFactory = new PlaneterySystemFactory(planeteryObject, planeterySystemBehaviour, planetStaticData, _services.Single<IRandomService>(),
+        planeterySystemCalculator);
+      _services.RegisterSingle<IPlaneterySystemFactory>(planeterySystemFactory);
     }
   }
 }
