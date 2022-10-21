@@ -1,15 +1,14 @@
 ﻿using System;
-using CodeBase.Logic;
 using CodeBase.Logic.Planetary;
 using CodeBase.Logic.Planetary.Factory;
 using CodeBase.Logic.Planetary.System;
 
 namespace CodeBase.UI.Mediators {
-  public class UpdatePlaneterySystemMediator {
+  public class PlaneterySystemUIMediator {
     private readonly PlaneterySystemRebuilder _rebuilder;
     private readonly Action<int, string, int> _setInfoAction;
 
-    public UpdatePlaneterySystemMediator(IReloadPublisher cameraDistance, PlaneterySystemRebuilder rebuilder, Action<int, string, int> setInfoAction) {
+    public PlaneterySystemUIMediator(IReloadPublisher cameraDistance, PlaneterySystemRebuilder rebuilder, Action<int, string, int> setInfoAction) {
       cameraDistance.Reload += OnReload;
       _rebuilder = rebuilder;
       _setInfoAction = setInfoAction;

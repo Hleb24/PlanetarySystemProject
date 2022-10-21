@@ -1,8 +1,7 @@
 using CodeBase.Data.StaticData;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Logic.Planetary.Factory;
-using CodeBase.Logic.Planetary.Object;
-using CodeBase.Logic.Planetary.System;
+using UnityEngine;
 
 namespace CodeBase.Infrastructure.States {
   public class BootstrapState : IState {
@@ -42,10 +41,11 @@ namespace CodeBase.Infrastructure.States {
 
     private void RegisterIPlaneterySystemFactory(IAssetsProvider assetsProvider) {
       var planetStaticData = assetsProvider.Load<PlanetsStaticData>(AssetsPath.PLANET_STATIC_DATA);
-      var planeteryObject = assetsProvider.Load<PlaneteryObject>(AssetsPath.PLANET);
-      var planeterySystemBehaviour = assetsProvider.Load<PlaneterySystemBehaviour>(AssetsPath.PLANETARY_SYSTEM);
+      var planeteryObject = assetsProvider.Load<GameObject>(AssetsPath.PLANET);
+      var planeterySystemBehaviour = assetsProvider.Load<GameObject>(AssetsPath.PLANETARY_SYSTEM);
+      var orbit = assetsProvider.Load<GameObject>(AssetsPath.ORBIT);
       var planeterySystemCalculator = new PlaneterySystemCalculator(planetStaticData, _services.Single<IRandomService>());
-      var planeterySystemFactory = new PlaneterySystemFactory(planeteryObject, planeterySystemBehaviour, planetStaticData, _services.Single<IRandomService>(),
+      var planeterySystemFactory = new PlaneterySystemFactory(planeteryObject, planeterySystemBehaviour, orbit, planetStaticData, _services.Single<IRandomService>(),
         planeterySystemCalculator);
       _services.RegisterSingle<IPlaneterySystemFactory>(planeterySystemFactory);
     }

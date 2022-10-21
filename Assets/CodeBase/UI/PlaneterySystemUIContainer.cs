@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using CodeBase.Logic;
+using CodeBase.Logic.Cameras;
 using CodeBase.Logic.Planetary;
 using TMPro;
 using UnityEngine;

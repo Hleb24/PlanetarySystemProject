@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeBase.Data;
+using CodeBase.Data.StaticData;
 using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.Services;
 
 namespace CodeBase.Logic.Planetary.Factory {
   public class PlaneterySystemCalculator {
-    private readonly List<MassClassEnum> _massClasses = new(Enum.GetValues(typeof(MassClassEnum)).Length);
+    private readonly List<MassClassEnum> _massClasses = new(Constants.NumberOfMassClass);
 
     private readonly IPlanetsData _planetsData;
     private readonly IRandomService _randomService;
@@ -36,11 +36,9 @@ namespace CodeBase.Logic.Planetary.Factory {
         double planetMass = _randomService.Next(minMass, maxMass);
         if (_iteration >= maxIteration) {
           planetMass = _planetsData[leftMass].MaxMass >= leftMass ? leftMass : _planetsData[leftMass].MaxMass;
-
-          Logger.Log("Mass Class " + massClassEnum);
           yield return planetMass;
-          leftMass -= planetMass;
 
+          leftMass -= planetMass;
           _iteration++;
           continue;
         }
@@ -49,7 +47,6 @@ namespace CodeBase.Logic.Planetary.Factory {
           continue;
         }
 
-        Logger.Log("Mass Class " + massClassEnum);
         yield return planetMass;
         leftMass -= planetMass;
 

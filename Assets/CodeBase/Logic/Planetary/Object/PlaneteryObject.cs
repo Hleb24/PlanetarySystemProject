@@ -1,17 +1,20 @@
 using CodeBase.Logic.Orbit;
+using ToolBox.Pools;
 using UnityEngine;
 
 namespace CodeBase.Logic.Planetary.Object {
-  public class PlaneteryObject : MonoBehaviour, IPlaneteryObject {
+  public class PlaneteryObject : MonoBehaviour, IPlaneteryObject, IPoolable {
     [SerializeField]
     private MassClassEnum _massClass;
     [SerializeField]
     private double _mass;
     [SerializeField]
     private Transform _planet;
-    [SerializeField]
-    private OrbitRenderer _orbitRenderer;
     private OrbitalMovement _orbitalMovement;
+
+    public void OnReuse() { }
+
+    public void OnRelease() { }
 
     public void Construct(OrbitalMovement orbitalMovement, MassClassEnum massClass, double mass, float planetScale, float orbitRadius) {
       _orbitalMovement = orbitalMovement;
@@ -19,7 +22,6 @@ namespace CodeBase.Logic.Planetary.Object {
       Mass = mass;
       _planet.localScale = new Vector3(planetScale, planetScale, planetScale);
       _orbitalMovement.Radius = orbitRadius;
-      _orbitRenderer.Radius = orbitRadius;
     }
 
     public void MoveByOrbit(float deltaTime) {

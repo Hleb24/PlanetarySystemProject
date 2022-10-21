@@ -1,5 +1,6 @@
 ﻿using CodeBase.Data.StaticData;
 using CodeBase.Logic.Planetary.System;
+using ToolBox.Pools;
 
 namespace CodeBase.Logic.Planetary.Factory {
   public class PlaneterySystemRebuilder {
@@ -12,7 +13,8 @@ namespace CodeBase.Logic.Planetary.Factory {
     }
 
     public IPlaneterySystem Recreate() {
-      UnityEngine.Object.Destroy(_planeterySystemFactory?.PlaneterySystemBehaviour.gameObject);
+      // UnityEngine.Object.Destroy(_planeterySystemFactory?.PlaneterySystemBehaviour.gameObject);
+      _planeterySystemFactory?.PlaneterySystemBehaviour.gameObject.Release();
       return _planeterySystemFactory?.Create(_planeteryStaticData.TotalMass);
     }
   }

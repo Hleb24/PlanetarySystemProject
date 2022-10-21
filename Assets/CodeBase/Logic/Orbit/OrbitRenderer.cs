@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using ToolBox.Pools;
+using UnityEngine;
 
 namespace CodeBase.Logic.Orbit {
   [RequireComponent(typeof(LineRenderer))]
-  public class OrbitRenderer : MonoBehaviour {
+  public class OrbitRenderer : MonoBehaviour, IPoolable {
     [SerializeField]
     private LineRenderer _line;
     [SerializeField, Range(30, 90)]
@@ -12,8 +13,11 @@ namespace CodeBase.Logic.Orbit {
 
     private void Awake() {
       _line ??= GetComponent<LineRenderer>();
-      CalculateOrbit();
     }
+
+    public void OnReuse() { }
+
+    public void OnRelease() { }
 
     private void CalculateOrbit() {
       int count = _segments + 1;

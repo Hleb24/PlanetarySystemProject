@@ -1,8 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-namespace CodeBase.Infrastructure {
+﻿namespace CodeBase.Infrastructure {
   public static class AppQuitHelper {
     public static void Quit(IQuitable quitable) {
       if (quitable is null) {
@@ -10,9 +6,9 @@ namespace CodeBase.Infrastructure {
       }
 
 #if UNITY_EDITOR
-      EditorApplication.isPlaying = false;
+      UnityEditor.EditorApplication.isPlaying = false;
 #else
-         Application.Quit();
+      UnityEngine.Application.Quit();
 #endif
     }
   }

@@ -19,7 +19,7 @@ namespace CodeBase.Infrastructure.States {
 
     private static void IniMediator(PlaneterySystemRebuilder rebuilder, IPlaneterySystem planeterySystem, PlaneterySystemUIContainer planeterySystemUIContainer,
       PlanetUI planetUI) {
-      var mediator = new UpdatePlaneterySystemMediator(planeterySystemUIContainer, rebuilder, planetUI.SetInfo);
+      var mediator = new PlaneterySystemUIMediator(planeterySystemUIContainer, rebuilder, planetUI.SetInfo);
       mediator.UpdateInfo(planeterySystem);
     }
 
@@ -31,7 +31,6 @@ namespace CodeBase.Infrastructure.States {
 
     private static void PrepareUpdatePlaneterySystem(PlaneterySystemStaticData planeterySystemStaticData, PlaneterySystemUIContainer planeterySystemUIContainer) {
       InitCameraZoom(planeterySystemUIContainer);
-
       planeterySystemUIContainer.Construct((float)planeterySystemStaticData.TotalMass);
       planeterySystemUIContainer.TotalMassChanged += newMass => planeterySystemStaticData.TotalMass = newMass;
     }
@@ -51,6 +50,7 @@ namespace CodeBase.Infrastructure.States {
     public void Exit() { }
 
     private void InitPlaneterySystem() {
+      InitObjectPool();
       var planeterySystemStaticData = _assetsProvider.Load<PlaneterySystemStaticData>(AssetsPath.PLANETERY_SYSTEM_STATIC_DATA);
       IPlaneterySystem planeterySystem = _planeterySystemFactory.Create(planeterySystemStaticData.TotalMass);
       if (_planeterySystemFactory is not PlaneterySystemFactory factory) {
@@ -60,6 +60,10 @@ namespace CodeBase.Infrastructure.States {
 
       var rebuilder = new PlaneterySystemRebuilder(planeterySystemStaticData, factory);
       InstantiateUI(planeterySystemStaticData, rebuilder, planeterySystem);
+    }
+
+    private void InitObjectPool() {
+      Instantiate(_assetsProvider.Load<GameObject>(AssetsPath.OBJECT_POOL));
     }
 
     private void InstantiateUI(PlaneterySystemStaticData planeterySystemStaticData, PlaneterySystemRebuilder rebuilder, IPlaneterySystem planeterySystem) {

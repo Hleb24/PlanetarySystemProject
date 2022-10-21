@@ -1,5 +1,4 @@
-﻿using CodeBase.Logic.Planetary;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CodeBase.Logic.Cameras {
   public class CameraZoom {

@@ -1,6 +1,6 @@
 using CodeBase.Logic.Planetary;
 
-namespace CodeBase.Data {
+namespace CodeBase.Data.StaticData {
   public interface IPlanetsData {
     PlanetData this[MassClassEnum massClass] { get; }
     PlanetData this[double mass] { get; }

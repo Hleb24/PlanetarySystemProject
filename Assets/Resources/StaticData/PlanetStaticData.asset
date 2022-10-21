@@ -48,3 +48,5 @@ MonoBehaviour:
     MaxMass: 5000
     MinRadius: 3.5
     MaxRadius: 27
+  _stepForOrbitRadius: 2
+  _startOrbitRadius: 4
