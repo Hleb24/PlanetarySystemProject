@@ -7,6 +7,7 @@ using CodeBase.Infrastructure.Services;
 using CodeBase.Logic.Orbit;
 using CodeBase.Logic.Planetary.Object;
 using CodeBase.Logic.Planetary.System;
+using CodeBase.UI;
 using UnityEngine;
 using Logger = CodeBase.Infrastructure.Logger;
 
@@ -21,7 +22,6 @@ namespace CodeBase.Logic.Planetary.Factory {
     private const float STEP_ORBIT_RADIUS = 2.0f;
 
     private readonly List<MassClassEnum> _massClasses = new(Enum.GetValues(typeof(MassClassEnum)).Length);
-    private readonly int _numberOfMassClass = Enum.GetValues(typeof(MassClassEnum)).Length;
 
     private readonly PlaneteryObject _planetPrefab;
     private readonly IPlanetInfo _planetInfo;
@@ -50,7 +50,7 @@ namespace CodeBase.Logic.Planetary.Factory {
 
       PlaneterySystemBehaviour = InstantiatePlaneterySystemBehaviour();
 
-      int maxIteration = _randomService.Next(1, _numberOfMassClass);
+      int maxIteration = _randomService.Next(1, Constants.NumberOfMassClass);
 
       if (leftMass <= _planetInfo[MassClassEnum.Asteroidan].MaxMass) {
         InstantiatePlanet(PlaneterySystemBehaviour, leftMass, planeteryObjects);
@@ -70,7 +70,7 @@ namespace CodeBase.Logic.Planetary.Factory {
         double planetMass = _randomService.Next(minMass, maxMass);
         if (_iteration >= maxIteration) {
           planetMass = _planetInfo[leftMass].MaxMass >= leftMass ? leftMass : _planetInfo[leftMass].MaxMass;
-          
+
           Logger.Log("Mass Class " + massClassEnum);
           InstantiatePlanet(PlaneterySystemBehaviour, planetMass, planeteryObjects);
           leftMass -= planetMass;
@@ -99,7 +99,7 @@ namespace CodeBase.Logic.Planetary.Factory {
     }
 
     private void SetupMassClasses() {
-      for (var i = 0; i < _numberOfMassClass; i++) {
+      for (var i = 0; i < Constants.NumberOfMassClass; i++) {
         _massClasses.Add((MassClassEnum)i);
       }
     }

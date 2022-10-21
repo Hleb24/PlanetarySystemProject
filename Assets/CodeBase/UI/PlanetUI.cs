@@ -12,11 +12,11 @@ namespace CodeBase.UI {
     private Button _quitButton;
 
     private void OnEnable() {
-      _quitButton.onClick.AddListener(Application.Quit);
+      _quitButton.onClick.AddListener(Quit.Out);
     }
 
     private void OnDisable() {
-      _quitButton.onClick.RemoveListener(Application.Quit);
+      _quitButton.onClick.RemoveListener(Quit.Out);
     }
 
     public void SetInfo(int index, string nameOfPlanet, string numberOfPlanets) {

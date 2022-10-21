@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using CodeBase.Data.StaticData;
@@ -79,7 +78,7 @@ namespace CodeBase.UI {
         _planetUI.SetInfo((int)planeteryObjects.Key, planeteryObjects.Key.ToString(), count.ToString());
       }
 
-      int length = Enum.GetValues(typeof(MassClassEnum)).Length;
+      int length = Constants.NumberOfMassClass;
       for (var i = 0; i < length; i++) {
         if (existMassClass.Contains((MassClassEnum)i)) {
           continue;
