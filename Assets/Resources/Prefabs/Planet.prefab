@@ -145,7 +145,6 @@ MonoBehaviour:
   _massClass: 0
   _mass: 0
   _planet: {fileID: 2009853998166607873}
-  _orbitRenderer: {fileID: 0}
 --- !u!114 &2009853999528910395
 MonoBehaviour:
   m_ObjectHideFlags: 0

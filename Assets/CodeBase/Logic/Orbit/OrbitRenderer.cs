@@ -1,4 +1,7 @@
 ﻿using ToolBox.Pools;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 namespace CodeBase.Logic.Orbit {
@@ -21,20 +24,20 @@ namespace CodeBase.Logic.Orbit {
 
     private void CalculateOrbit() {
       int count = _segments + 1;
-      var points = new Vector3[count];
-      for (var i = 0; i < count; i++) {
-        float angle = i / (float)_segments * 360 * Mathf.Deg2Rad;
-        float x = Mathf.Sin(angle) * _orbitRadius;
-        float z = Mathf.Cos(angle) * _orbitRadius;
-        points[i] = new Vector3(x, 0, z);
-      }
+      var job = new OrbitRendererJob {
+        Points = new NativeArray<Vector3>(count, Allocator.TempJob),
+        Segments = _segments,
+        OrbitRadius = _orbitRadius
+      };
+      int batchCount = _segments / 3;
+      JobHandle handle = job.Schedule(count, batchCount);
+      handle.Complete();
 
-      points[_segments] = points[0];
-
-      DrawOrbit(count, points);
+      DrawOrbit(count, job.Points);
+      job.Points.Dispose();
     }
 
-    private void DrawOrbit(int count, Vector3[] points) {
+    private void DrawOrbit(int count, NativeArray<Vector3> points) {
       _line.positionCount = count;
       _line.SetPositions(points);
     }
@@ -47,6 +50,23 @@ namespace CodeBase.Logic.Orbit {
       set {
         _orbitRadius = value;
         CalculateOrbit();
+      }
+    }
+
+    [BurstCompile]
+    private struct OrbitRendererJob : IJobParallelFor {
+      public NativeArray<Vector3> Points;
+      [ReadOnly]
+      public int Segments;
+      [ReadOnly]
+      public float OrbitRadius;
+
+      [BurstCompile]
+      public void Execute(int index) {
+        float angle = index / (float)Segments * 360 * Mathf.Deg2Rad;
+        float x = Mathf.Sin(angle) * OrbitRadius;
+        float z = Mathf.Cos(angle) * OrbitRadius;
+        Points[index] = new Vector3(x, 0, z);
       }
     }
   }

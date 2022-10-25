@@ -38,7 +38,6 @@ namespace CodeBase.UI {
 
     public void Construct(float mass) {
       _massText.text = mass.ToString(CultureInfo.CurrentCulture);
-      OnCameraSliderChanged(_cameraSlider.value);
     }
 
     private void OnMassChanged(float newMass) {

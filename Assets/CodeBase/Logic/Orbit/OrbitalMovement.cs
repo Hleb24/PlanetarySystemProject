@@ -1,4 +1,7 @@
 using CodeBase.Infrastructure.Services;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace CodeBase.Logic.Orbit {
@@ -33,10 +36,22 @@ namespace CodeBase.Logic.Orbit {
 
     private Vector3 GetTargetPosition(float deltaTime) {
       float newAngle = UpdateAngle(deltaTime);
-      float positionX = _center.position.x + Mathf.Sin(newAngle) * _orbitRadius;
-      float positionY = _center.position.y;
-      float positionZ = _center.position.z + Mathf.Cos(newAngle) * _orbitRadius;
-      return new Vector3(positionX, positionY, positionZ);
+
+      var newPosition = new NativeArray<Vector3>(1, Allocator.TempJob);
+      var job = new OrbitMovementJub {
+        angle = newAngle,
+        orbitRadius = _orbitRadius,
+        center = _center.position,
+        NewPosition = newPosition
+      };
+
+      JobHandle handle = job.Schedule();
+      handle.Complete();
+
+      Vector3 targetPosition = newPosition[0];
+      newPosition.Dispose();
+
+      return targetPosition;
     }
 
     private float UpdateAngle(float deltaTime) {
@@ -46,6 +61,21 @@ namespace CodeBase.Logic.Orbit {
     public float Radius {
       set {
         _orbitRadius = value;
+      }
+    }
+
+    private struct OrbitMovementJub : IJob {
+      public NativeArray<Vector3> NewPosition;
+      public Vector3 center;
+      public float orbitRadius;
+      public float angle;
+
+      public void Execute() {
+        math.sincos(angle, out float x, out float z);
+        Vector3 position = NewPosition[0];
+        position.x = center.x + x * orbitRadius;
+        position.z = center.x + z * orbitRadius;
+        NewPosition[0] = position;
       }
     }
   }

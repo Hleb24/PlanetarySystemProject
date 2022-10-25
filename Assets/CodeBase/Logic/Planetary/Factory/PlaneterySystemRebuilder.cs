@@ -13,7 +13,6 @@ namespace CodeBase.Logic.Planetary.Factory {
     }
 
     public IPlaneterySystem Recreate() {
-      // UnityEngine.Object.Destroy(_planeterySystemFactory?.PlaneterySystemBehaviour.gameObject);
       _planeterySystemFactory?.PlaneterySystemBehaviour.gameObject.Release();
       return _planeterySystemFactory?.Create(_planeteryStaticData.TotalMass);
     }

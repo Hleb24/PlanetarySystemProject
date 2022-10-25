@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CodeBase.Data.StaticData;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Logic.Cameras;
@@ -43,15 +44,15 @@ namespace CodeBase.Infrastructure.States {
       _assetsProvider = assetsProvider;
     }
 
-    public void Enter() {
-      InitPlaneterySystem();
+    public async void Enter() {
+      await InitPlaneterySystem();
     }
 
     public void Exit() { }
 
-    private void InitPlaneterySystem() {
-      InitObjectPool();
-      var planeterySystemStaticData = _assetsProvider.Load<PlaneterySystemStaticData>(AssetsPath.PLANETERY_SYSTEM_STATIC_DATA);
+    private async ValueTask InitPlaneterySystem() {
+      await InitObjectPool();
+      var planeterySystemStaticData = await _assetsProvider.LoadAsync<PlaneterySystemStaticData>(AssetsPath.PLANETERY_SYSTEM_STATIC_DATA);
       IPlaneterySystem planeterySystem = _planeterySystemFactory.Create(planeterySystemStaticData.TotalMass);
       if (_planeterySystemFactory is not PlaneterySystemFactory factory) {
         Logger.Error($"{nameof(PlaneterySystemFactory)} not implemented {nameof(IPlaneterySystemFactory)!}");
@@ -59,35 +60,36 @@ namespace CodeBase.Infrastructure.States {
       }
 
       var rebuilder = new PlaneterySystemRebuilder(planeterySystemStaticData, factory);
-      InstantiateUI(planeterySystemStaticData, rebuilder, planeterySystem);
+      await InstantiateUI(planeterySystemStaticData, rebuilder, planeterySystem);
     }
 
-    private void InitObjectPool() {
-      Instantiate(_assetsProvider.Load<GameObject>(AssetsPath.OBJECT_POOL));
+    private async ValueTask InitObjectPool() {
+      var objectPool = await _assetsProvider.LoadAsync<GameObject>(AssetsPath.OBJECT_POOL);
+      Instantiate(objectPool);
     }
 
-    private void InstantiateUI(PlaneterySystemStaticData planeterySystemStaticData, PlaneterySystemRebuilder rebuilder, IPlaneterySystem planeterySystem) {
-      GameObject hud = InitHUD();
-      PlanetUI planetUI = InitPlanetUI(hud.transform);
-      PlaneterySystemUIContainer planeterySystemUIContainer = InitUpdatePlaneterySystem(hud.transform);
+    private async ValueTask InstantiateUI(PlaneterySystemStaticData planeterySystemStaticData, PlaneterySystemRebuilder rebuilder, IPlaneterySystem planeterySystem) {
+      GameObject hud = await InitHUD();
+      PlanetUI planetUI = await InitPlanetUI(hud.transform);
+      PlaneterySystemUIContainer planeterySystemUIContainer = await InitUpdatePlaneterySystem(hud.transform);
       PrepareUpdatePlaneterySystem(planeterySystemStaticData, planeterySystemUIContainer);
       IniMediator(rebuilder, planeterySystem, planeterySystemUIContainer, planetUI);
     }
 
-    private GameObject InitHUD() {
-      var hud = _assetsProvider.Load<GameObject>(AssetsPath.HUD);
+    private async ValueTask<GameObject> InitHUD() {
+      var hud = await _assetsProvider.LoadAsync<GameObject>(AssetsPath.HUD);
       return Instantiate(hud);
     }
 
-    private PlanetUI InitPlanetUI(Transform hud) {
-      var planetPrefab = _assetsProvider.Load<PlanetUI>(AssetsPath.PLANET_UI);
+    private async ValueTask<PlanetUI> InitPlanetUI(Transform hud) {
+      var planetPrefab = await _assetsProvider.LoadAsync<PlanetUI>(AssetsPath.PLANET_UI);
       PlanetUI planetaryUI = Object.Instantiate(planetPrefab, hud);
       planetaryUI.Quit += AppQuitHelper.Quit;
       return planetaryUI;
     }
 
-    private PlaneterySystemUIContainer InitUpdatePlaneterySystem(Transform hud) {
-      var updatePlaneterySystemContainer = _assetsProvider.Load<PlaneterySystemUIContainer>(AssetsPath.PLANETERY_SYSTEM_UI_CONTAINER);
+    private async ValueTask<PlaneterySystemUIContainer> InitUpdatePlaneterySystem(Transform hud) {
+      var updatePlaneterySystemContainer = await _assetsProvider.LoadAsync<PlaneterySystemUIContainer>(AssetsPath.PLANETERY_SYSTEM_UI_CONTAINER);
       return Instantiate(updatePlaneterySystemContainer, hud);
     }
   }
